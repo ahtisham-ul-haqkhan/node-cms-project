@@ -1,0 +1,36 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Build files
+dist/
+build/
+out/
+
+# Environment files
+.env
+.env.*  
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Coverage directory
+coverage/
+.nyc_output/
+
+# Other files you may want to ignore
+.pnp/
+.pnp.js
+
+# Lock files (you may ignore if you want, but it's often recommended to commit them for reproducibility)
+# package-lock.json
+# yarn.lock
