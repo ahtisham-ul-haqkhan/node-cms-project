@@ -25,7 +25,7 @@ mongoose.connect(MongoURL).then(() => {
 })
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Hello Worlsd!')
 })
 
 app.listen(PORT, () => {
