@@ -24,9 +24,14 @@ mongoose.connect(MongoURL).then(() => {
     console.log("DB Connected")
 })
 
-app.get('/', (req, res) => {
-  res.send('Hello Worlsd!')
+  //Frontend Routes
+app.use('/', require('./routes/frontend.js'))
+
+app.use('/admin', (req,res,next) => {
+  res.locals.layout = 'admin/layout';
+  next();
 })
+app.use('/admin', require('./routes/admin.js'))
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)

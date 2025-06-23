@@ -9,4 +9,4 @@ frontendRouter.get("/search", frontendController.search);
 frontendRouter.get("/author/:name", frontendController.author);
 frontendRouter.post("/single/:id/comment", frontendController.addComment); // <- post instead of get
 
-export default frontendRouter;
+module.exports =  frontendRouter;

@@ -1,22 +1,18 @@
 const mongoose = require('mongoose');
 
-const categoryModel = require('../models/category');
-const newsModel = require('../models/news');
-const userModel = require('../models/user');
-const commentsModel = require('../models/comments');
+const categoryModel = require('../models/categoryModel');
+const newsModel = require('../models/newsModel');
+const userModel = require('../models/newsModel');
+const commentsModel = require('../models/commentModel');
 
 
 const index = async (req,res) => {
-    try {
-        
-    } catch (error) {
-        
-    }
+        res.render('index');
 }
 
 const articleByCategories = async (req,res) => {
     try {
-        
+        res.render('category');
     } catch (error) {
         
     }
@@ -24,7 +20,7 @@ const articleByCategories = async (req,res) => {
 
 const singleArticle = async (req,res) => {
     try {
-        
+        res.render('single');
     } catch (error) {
         
     }
@@ -32,7 +28,7 @@ const singleArticle = async (req,res) => {
 
 const search = async (req,res) => {
     try {
-        
+        res.render('search');
     } catch (error) {
         
     }
@@ -40,7 +36,7 @@ const search = async (req,res) => {
 
 const author = async (req,res) => {
     try {
-        
+        res.render('author');
     } catch (error) {
         
     }
@@ -54,7 +50,7 @@ const addComment = async (req,res) => {
     }
 }
 
-module.export = {
+module.exports = {
     index,
     articleByCategories,
     singleArticle,

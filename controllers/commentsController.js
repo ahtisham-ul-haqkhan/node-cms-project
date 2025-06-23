@@ -1,7 +1,9 @@
-const commentsModel = require('../models/comments');
+const commentsModel = require('../models/commentModel');
 
 
-const allComments = async (req, res) => {};
+const allComments = async (req, res) => {
+    res.render('admin/comments');
+};
 const addCommentsPage = async (req, res) => {};
 const addComments = async (req, res) => {};
 const updateCommentsPage = async (req, res) => {};
