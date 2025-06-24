@@ -10,7 +10,7 @@
             <div class="card-body">
               <!-- Form Start -->
               <!-- <%= user%> -->
-              <form  action="" method ="POST" autocomplete="off">
+              <form  action="/admin/update-user/<%= user.fullname %>" method ="POST" autocomplete="off">
                 <div class="mb-3">
                   <label class="form-label">Full Name</label>
                   <input type="text" name="fullname" class="form-control" placeholder="Full Name" required value="<%= user.fullname %>">
