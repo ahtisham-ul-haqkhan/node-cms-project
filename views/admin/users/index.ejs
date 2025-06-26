@@ -26,7 +26,7 @@
                           <td><%= user.username%></td>
                           <td><%= user.role%></td>
                           <td class='edit'><a href="/admin/update-user/<%= user._id %>"><i class='fa fa-edit'></i></a></td>
-                          <td class='delete'><a href='delete-user.html'><i class='fa fa-trash-o'></i></a></td>
+                          <td class='delete'><a href="/admin/delete-user/<%= user._id %>"><i class='fa fa-trash-o'></i></a></td>
                       </tr>
                       <% }) %>
                   </tbody>
