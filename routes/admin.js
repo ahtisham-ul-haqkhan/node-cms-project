@@ -31,7 +31,7 @@ router.get("/add-category",isLogin,  categoryController.addCategoryPage);
 router.post("/add-category", isLogin, categoryController.addCategory);
 router.get("/update-category/:id", isLogin, categoryController.updateCategoryPage);
 router.post("/update-category/:id", isLogin, categoryController.updateCategory);
-router.post("/delete-category/:id", isLogin, categoryController.deleteCategory);
+router.get("/delete-category/:id", isLogin, categoryController.deleteCategory);
 
 // // Article routes
 router.get("/article", isLogin, articleController.allArticle);

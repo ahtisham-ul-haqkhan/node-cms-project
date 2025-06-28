@@ -28,7 +28,7 @@ mongoose.connect(MongoURL).then(() => {
   //Frontend Routes
 app.use('/', require('./routes/frontend.js'))
 
-app.use(isLogin);
+// app.use(isLogin);
 
 app.use((req, res, next) => {
   res.locals.role = req.role;
