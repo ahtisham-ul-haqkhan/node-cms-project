@@ -5,7 +5,7 @@
                 <h1 class="admin-heading"><i class="fa fa-file-text"></i> All Articles</h1>
             </div>
             <div class="col-md-2">
-                <a class="add-new" href="add-article.html">Add New Article</a>
+                <a class="add-new" href="/admin/add-article">Add New Article</a>
             </div>
             <div class="col-md-12">
                 <table class="content-table" style="background: white;">
@@ -13,85 +13,36 @@
                       <th>S.No.</th>
                       <th>Title</th>
                       <th>Category</th>
+                      <th>Content</th>
                       <th>Date</th>
                       <th>Author</th>
+                      <th>Image</th>
                       <th>Edit</th>
                       <th>Delete</th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class='id'>1</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2025</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href='update-article.html'><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href='delete-article.html'><i class='fa fa-trash-o'></i></a></td>
-                        </tr>
-                        <tr>
-                            <td class='id'>2</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2025</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href='update-article.html'><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href='delete-article.html'><i class='fa fa-trash-o'></i></a></td>
-                        </tr>
-                        <tr>
-                            <td class='id'>3</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2025</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href='update-article.html'><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href='delete-article.html'><i class='fa fa-trash-o'></i></a></td>
-                        </tr>
-                        <tr>
-                            <td class='id'>4</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2025</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href='update-article.html'><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href='delete-article.html'><i class='fa fa-trash-o'></i></a></td>
-                        </tr>
-                        <tr>
-                            <td class='id'>5</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2025</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href='update-article.html'><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href='delete-article.html'><i class='fa fa-trash-o'></i></a></td>
-                        </tr>
-                        <tr>
-                            <td class='id'>6</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2025</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href='update-article.html'><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href='delete-article.html'><i class='fa fa-trash-o'></i></a></td>
-                        </tr>
-                        <tr>
-                            <td class='id'>7</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2025</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href='update-article.html'><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href='delete-article.html'><i class='fa fa-trash-o'></i></a></td>
-                        </tr>
-                        <tr>
-                            <td class='id'>8</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Html</td>
-                            <td>01 Nov, 2025</td>
-                            <td>Admin</td>
-                            <td class='edit'><a href='update-article.html'><i class='fa fa-edit'></i></a></td>
-                            <td class='delete'><a href='delete-article.html'><i class='fa fa-trash-o'></i></a></td>
-                        </tr>
-                    </tbody>
+                        <% articles.forEach((article, index) => { %>
+                          <tr>
+                            <td class='id'><%= index + 1 %></td>
+                            <td><%= article.title %></td>
+                            <td><%= article.category.name %></td>
+                            <td><%= article.content %></td>
+                            <td><%= article.createdAt.toDateString() %></td>
+                            <td><%= article.author.fullname %></td>
+                            <td>
+                                <img src="/uploads/<%= article.image %>" alt="<%= article.title %>" width="100" height="80">
+                              </td>
+                              
+                            <td class='edit'>
+                              <a href='/admin/update-article/<%= article._id %>'><i class='fa fa-edit'></i></a>
+                            </td>
+                            <td class='delete'>
+                              <a href='/admin/delete-article/<%= article._id %>'><i class='fa fa-trash-o'></i></a>
+                            </td>
+                          </tr>
+                        <% }) %>
+                      </tbody>
+                      
                 </table>
                 <nav aria-label="...">
                   <ul class="pagination">

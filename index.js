@@ -30,11 +30,11 @@ app.use('/', require('./routes/frontend.js'))
 
 // app.use(isLogin);
 
-app.use((req, res, next) => {
-  res.locals.role = req.role;
-  res.locals.fullname = req.fullname;
-  next();
-});
+// app.use((req, res, next) => {
+//   res.locals.role = req.role;
+//   res.locals.fullname = req.fullname;
+//   next();
+// });
 
 app.use('/admin', (req,res,next) => {
   res.locals.layout = 'admin/layout';

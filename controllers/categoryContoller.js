@@ -21,12 +21,35 @@ const addCategory = async(req,res) => {
     }
 }
 const updateCategoryPage = async(req,res) => {
-    res.render('admin/categories/update');
+    const category = await categoryModel.findById(req.params.id);
+    res.render('admin/categories/update', { category });
 }
-const updateCategory = async(req,res) => {}
+const updateCategory = async(req,res) => {
+    try {
+        const { id } = req.params;
+        const {name, description} = req.body;
+        const category = await categoryModel.findById(id);
+
+        category.name = name || category.name;
+        category.description = description || category.description;
+
+        await category.save();
+
+
+        res.redirect("/admin/category");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error.message);
+    }
+}
+
+
 const deleteCategory = async(req,res) => {
     try {
-        
+        const {id } = req.params;
+        const category = await categoryModel.findByIdAndDelete(id); 
+
+        res.redirect("/admin/category");
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');

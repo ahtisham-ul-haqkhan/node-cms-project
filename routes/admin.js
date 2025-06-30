@@ -3,6 +3,7 @@ const router = express.Router();
 
 const  isLogin = require('../middleware/isLogin')
 const isAdmin = require('../middleware/isAdmin')
+const upload = require('../middleware/multer.js')
 
 const userController = require('../controllers/userController');
 const categoryController = require('../controllers/categoryContoller');
@@ -30,15 +31,16 @@ router.get("/category", isLogin, categoryController.allCategory);
 router.get("/add-category",isLogin,  categoryController.addCategoryPage);
 router.post("/add-category", isLogin, categoryController.addCategory);
 router.get("/update-category/:id", isLogin, categoryController.updateCategoryPage);
+// router.post("/category-update/:id", isLogin, categoryController.updateCategory);
 router.post("/update-category/:id", isLogin, categoryController.updateCategory);
 router.get("/delete-category/:id", isLogin, categoryController.deleteCategory);
 
 // // Article routes
 router.get("/article", isLogin, articleController.allArticle);
 router.get("/add-article", isLogin, articleController.addArticlePage);
-router.post("/add-article", isLogin, articleController.addArticle);
+router.post('/add-article', isLogin, upload.single('image'), articleController.addArticle);
 router.get("/update-article/:id", isLogin, articleController.updateArticlePage);
-router.post("/update-article/:id", isLogin, articleController.updateArticle);
+router.post("/update-article/:id", isLogin, upload.single('image'), articleController.updateArticle);
 router.post("/delete-article/:id", isLogin, articleController.deleteArticle);
 
 

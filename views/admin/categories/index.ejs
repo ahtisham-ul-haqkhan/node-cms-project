@@ -25,7 +25,7 @@
                             <td><%= category.slug %></td>
                             <td><%= category.description %></td>
                             <td class='edit'>
-                                <a href='update-category.html'><i class='fa fa-edit'></i></a>
+                                <a href="/admin/update-category/<%= category._id %>"><i class='fa fa-edit'></i></a>
                                 <a href="/admin/delete-category/<%= category._id %>"><i class='fa fa-trash-o'></i></a>
                             </td>
                         </tr>
