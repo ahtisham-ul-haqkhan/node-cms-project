@@ -8,18 +8,22 @@
                 <div class="card">
                   <h5 class="card-header">Settings</h5>
                   <div class="card-body">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="/admin/save-settings" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="article_title" class="form-label">Website Title</label>
-                            <input type="text" name="article_title" class="form-control" autocomplete="off" required="">
+                            <input type="text" name="website_name" class="form-control" autocomplete="off" value="<%= setting.website_name %>">
                         </div>
                         <div class="mb-3">
                             <label for="website_logo" class="form-label">Upload Logo</label>
+                            <br>
+                            <% if(setting.website_logo) { %>
+                                <img src="/uploads/<%= setting.website_logo %>" alt="logo" style="width: 100px; height: 100px;">
+                            <% } %>
                             <input type="file" name="website_logo" class="form-control" required="">
                         </div>
                         <div class="mb-3">
                             <label for="footer_description" class="form-label">Footer Description</label>
-                            <input type="text" name="footer_description" class="form-control" autocomplete="off" required="">
+                            <input type="text" name="footer_description" class="form-control" autocomplete="off" required="" value="<%= setting.footer_description %>">
                         </div>
                         
                         <input type="submit" name="submit" class="btn btn-primary" value="Save" required="">

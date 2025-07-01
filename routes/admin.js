@@ -17,6 +17,7 @@ router.post("/index", userController.adminLogin);
 router.get("/logout", userController.Logout);
 router.get("/dashboard",isLogin, userController.dashboard);
 router.get("/settings", isLogin, isAdmin, userController.settings);
+router.post("/save-settings", isLogin, isAdmin, upload.single('website_logo'), userController.saveSettings);
 
 // User routes
 router.get("/users", isLogin, userController.allUser);
@@ -41,7 +42,7 @@ router.get("/add-article", isLogin, articleController.addArticlePage);
 router.post('/add-article', isLogin, upload.single('image'), articleController.addArticle);
 router.get("/update-article/:id", isLogin, articleController.updateArticlePage);
 router.post("/update-article/:id", isLogin, upload.single('image'), articleController.updateArticle);
-router.post("/delete-article/:id", isLogin, articleController.deleteArticle);
+router.get("/delete-article/:id", isLogin, articleController.deleteArticle);
 
 
 // // Cooments routes
@@ -52,6 +53,38 @@ router.get("/update-comments/:id", isLogin, commentsController.updateCommentsPag
 router.post("/update-comments/:id", isLogin, commentsController.updateComments);
 router.post("/delete-comments/:id", isLogin, commentsController.deleteComments);
 
+// 404 Middlewar
 
+router.use(isLogin,(req,res, next) => {
+    res.status(404).render('admin/404', {
+        role: req.role || res.locals.role, 
+        message: "Page Not Found",
+    })
+
+});
+
+// 500 Error Handler (for internal errors)
+router.use(isLogin, (err, req, res, next) => {
+    console.error(err.stack);
+
+    const status = err.status || 500;
+    let view;
+    switch(status) {
+        case 404:
+        view = "admin/404"
+        break;
+        case 500:
+        view = "admin/500"
+        break;
+        default:
+            view = "admin/500"; 
+
+    }
+    // const view = status === 404 ? 'admin/404' : 'admin/500';
+    res.status(status).render(view, {
+        role: req.role || res.locals.role || 'guest', // fallback to avoid undefined
+        message: err.message || "Something went wrong",
+    });
+});
 
 module.exports =  router;

@@ -1,6 +1,10 @@
 const categoryModel = require('../models/categoryModel');
 const newsModel = require('../models/newsModel');
 const userModel = require('../models/userModel');
+const createError = require('../utils/error-message')
+const path = require('path');
+const fs = require('fs');
+const mongoose = require('mongoose');
 
 const allArticle = async (req, res) => {
     let articles
@@ -15,7 +19,7 @@ const addArticlePage = async (req, res) => {
     const categories = await categoryModel.find();
     res.render('admin/articals/create', { categories });
 };
-const addArticle = async (req, res) => {
+const addArticle = async (req, res, next) => {
     try {
         const { title, content, category } = req.body;
 
@@ -37,28 +41,44 @@ const addArticle = async (req, res) => {
 
         res.redirect('/admin/article');
     } catch (error) {
-        console.error("Add Article Error:", error);
-        res.status(500).send(error.message);
+        next(error);
+        // console.error("Add Article Error:", error);
+        // res.status(500).send(error.message);
     }
 };
 
 
 
-const updateArticlePage = async (req, res) => {
-    const article = await newsModel.findById(req.params.id)
-                                                            .populate('category', 'name')
-                                                            .populate('author', 'fullname');
-    const categories = await categoryModel.find();
 
-    if(req.role == 'author') {
-        if(req.id != article.author._id) {
+const updateArticlePage = async (req, res, next) => {
+    try {
+        const { id } = req.params;
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return next(createError('Invalid Article ID Format', 404));
+        }
+
+        const article = await newsModel.findById(id)
+            .populate('category', 'name')
+            .populate('author', 'fullname');
+
+        if (!article) {
+            return next(createError('Article Not Found', 404));
+        }
+
+        const categories = await categoryModel.find();
+
+        if (req.role === 'author' && req.id != article.author._id.toString()) {
             return res.status(401).send("Unauthorized");
         }
+
+        res.render('admin/articals/update', { article, categories });
+
+    } catch (error) {
+        next(error); // goes to 500 handler
     }
-    res.render('admin/articals/update', { article , categories});
 };
-const updateArticle = async (req, res) => {
+const updateArticle = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { title, content, category } = req.body;
@@ -77,6 +97,8 @@ const updateArticle = async (req, res) => {
         article.category = category || article.category;
 
         if (req.file) {
+            const imagePath = path.join(__dirname, '../public/uploads', article.image);
+            fs.unlinkSync(imagePath)
             article.image = req.file.filename;
         }
 
@@ -84,8 +106,9 @@ const updateArticle = async (req, res) => {
         res.redirect('/admin/article');
 
     } catch (error) {
-        console.error("Update Article Error:", error);
-        res.status(500).send(error.message);
+        next(error);
+        // console.error("Update Article Error:", error);
+        // res.status(500).send(error.message);
     }
 };
 
@@ -98,6 +121,12 @@ const deleteArticle = async (req, res) => {
                 return res.status(401).send("Unauthorized");
             }
         }
+
+        // if (article.file) {
+        //     const imagePath = path.join(__dirname, '../public/uploads', article.image);
+        //     fs.unlinkSync(imagePath)
+        //     article.image = req.file.filename;
+        // }
 
         await newsModel.deleteOne(id);
         res.redirect('/admin/artilce');
