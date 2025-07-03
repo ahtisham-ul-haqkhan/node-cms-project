@@ -4,6 +4,7 @@ const router = express.Router();
 const  isLogin = require('../middleware/isLogin')
 const isAdmin = require('../middleware/isAdmin')
 const upload = require('../middleware/multer.js')
+const isValid = require("../middleware/validation.js")
 
 const userController = require('../controllers/userController');
 const categoryController = require('../controllers/categoryContoller');
@@ -13,7 +14,7 @@ const commentsController = require('../controllers/commentsController');
 
 // Auth routes
 router.get("/", userController.loginPage);
-router.post("/index", userController.adminLogin);
+router.post("/index", isValid.loginValidation,  userController.adminLogin);
 router.get("/logout", userController.Logout);
 router.get("/dashboard",isLogin, userController.dashboard);
 router.get("/settings", isLogin, isAdmin, userController.settings);
@@ -22,26 +23,26 @@ router.post("/save-settings", isLogin, isAdmin, upload.single('website_logo'), u
 // User routes
 router.get("/users", isLogin, userController.allUser);
 router.get("/add-user", isLogin, userController.addUserPage);
-router.post("/add-user", isLogin, userController.addUser);
+router.post("/add-user", isLogin, isValid.userValidation, userController.addUser);
 router.get("/update-user/:id", isLogin, userController.updateUserPage);
-router.post("/update-user/:id", isLogin, userController.updateUser);
+router.post("/update-user/:id", isLogin, isValid.userUpdateValidation, userController.updateUser);
 router.get("/delete-user/:id", isLogin, userController.deleteUser);
 
 // // Category routes
 router.get("/category", isLogin, categoryController.allCategory);
 router.get("/add-category",isLogin,  categoryController.addCategoryPage);
-router.post("/add-category", isLogin, categoryController.addCategory);
+router.post("/add-category", isLogin, isValid.categoryValidation, categoryController.addCategory);
 router.get("/update-category/:id", isLogin, categoryController.updateCategoryPage);
 // router.post("/category-update/:id", isLogin, categoryController.updateCategory);
-router.post("/update-category/:id", isLogin, categoryController.updateCategory);
+router.post("/update-category/:id", isLogin, isValid.categoryValidation, categoryController.updateCategory);
 router.get("/delete-category/:id", isLogin, categoryController.deleteCategory);
 
 // // Article routes
 router.get("/article", isLogin, articleController.allArticle);
 router.get("/add-article", isLogin, articleController.addArticlePage);
-router.post('/add-article', isLogin, upload.single('image'), articleController.addArticle);
+router.post('/add-article', isLogin, upload.single('image'),  isValid.articleValidation, articleController.addArticle);
 router.get("/update-article/:id", isLogin, articleController.updateArticlePage);
-router.post("/update-article/:id", isLogin, upload.single('image'), articleController.updateArticle);
+router.post("/update-article/:id", isLogin, upload.single('image'), isValid.articleValidation, articleController.updateArticle);
 router.get("/delete-article/:id", isLogin, articleController.deleteArticle);
 
 

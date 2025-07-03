@@ -2,6 +2,8 @@ const userModel = require('../models/userModel');
 const newsModel = require('../models/newsModel');
 const categoryModel = require('../models/categoryModel');
 const settingModel = require("../models/settingModel")
+const createError = require('../utils/error-message')
+const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
@@ -10,11 +12,20 @@ dotenv.config();
 
 const loginPage = async(req,res) => {
     res.render('admin/login', {
-        layout: false
+        layout: false,
+        errors: 0
     });
 }
-const adminLogin = async(req,res) => {
+const adminLogin = async(req,res, next) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // return res.status(400).json({ errors: errors.array() });
+            return  res.render('admin/login', {
+                layout: false,
+                errors: errors.array()
+            });
+        }
         const {username, password} = req.body;
         const user = await userModel.findOne({username});
         if(!user) {
@@ -104,10 +115,17 @@ const allUser = async (req, res) => {
 };
 
 const addUserPage = async(req,res) => {
-    res.render('admin/users/create');
+    res.render('admin/users/create', {errors: 0});
 }
-const addUser = async(req,res) => {
+const addUser = async(req,res, next) => {
     try {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return  res.render('admin/users/create', {
+                errors: errors.array()
+            });
+        }
         const {fullname, username, password, role} = req.body;
         await userModel.create({
             fullname,
@@ -121,21 +139,39 @@ const addUser = async(req,res) => {
         res.status(500).send('Internal Server Error');
     }
 }
-const updateUserPage = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const user = await userModel.findById(id); 
-        res.render('admin/users/update', { user });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('User not found');
-    }
-};
-
-
-const updateUser = async (req, res) => {
+const updateUserPage = async (req, res, next) => {
     try {
       const { id } = req.params;
+      const user = await userModel.findById(id); 
+  
+      if (!user) {
+        return next(createError('User Not Found', 404));
+      }
+  
+      res.render('admin/users/update', {
+        user,
+        errors: []
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+  
+  // POST Update User Handler
+  const updateUser = async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      const { id } = req.params;
+  
+      if (!errors.isEmpty()) {
+        // Get existing user again to keep _id available in form
+        const existingUser = await userModel.findById(id);
+        return res.render('admin/users/update', {
+          user: { ...req.body, _id: existingUser._id, username: existingUser.username },
+          errors: errors.array()
+        });
+      }
+  
       const { fullname, password, role } = req.body;
   
       const user = await userModel.findById(id);
@@ -145,7 +181,6 @@ const updateUser = async (req, res) => {
   
       user.fullname = fullname || user.fullname;
       user.password = password || user.password;
-      
       user.role = role || user.role;
   
       await user.save();

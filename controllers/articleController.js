@@ -2,6 +2,7 @@ const categoryModel = require('../models/categoryModel');
 const newsModel = require('../models/newsModel');
 const userModel = require('../models/userModel');
 const createError = require('../utils/error-message')
+const { validationResult } = require('express-validator');
 const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
@@ -21,6 +22,15 @@ const addArticlePage = async (req, res) => {
 };
 const addArticle = async (req, res, next) => {
     try {
+    const categories = await categoryModel.find();
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return  res.render('admin/articals/create', {
+                categories: categories,
+                errors: errors.array()
+            });
+        }
         const { title, content, category } = req.body;
 
         if (!req.file) {
@@ -72,7 +82,7 @@ const updateArticlePage = async (req, res, next) => {
             return res.status(401).send("Unauthorized");
         }
 
-        res.render('admin/articals/update', { article, categories });
+        res.render('admin/articals/update', { article, categories, error: 0 });
 
     } catch (error) {
         next(error); // goes to 500 handler
@@ -80,7 +90,19 @@ const updateArticlePage = async (req, res, next) => {
 };
 const updateArticle = async (req, res, next) => {
     try {
+
+        const errors = validationResult(req);
         const { id } = req.params;
+
+        if (!errors.isEmpty()) {
+            const categories = await categoryModel.find();
+            const article = await newsModel.findById(id);
+            return  res.render('admin/articals/update', {
+                categories: categories,
+                article: { ...req.body, _id: article._id, image: article.image},
+                errors: errors.array()
+            });
+        }
         const { title, content, category } = req.body;
 
         const article = await newsModel.findById(id);
@@ -128,7 +150,7 @@ const deleteArticle = async (req, res) => {
         //     article.image = req.file.filename;
         // }
 
-        await newsModel.deleteOne(id);
+        await newsModel.deleteOne({ _id: id });
         res.redirect('/admin/artilce');
     } catch (error) {
         console.error("Add Article Error:", error);
