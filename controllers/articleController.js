@@ -150,8 +150,8 @@ const deleteArticle = async (req, res) => {
         //     article.image = req.file.filename;
         // }
 
-        await newsModel.deleteOne({ _id: id });
-        res.redirect('/admin/artilce');
+        // await newsModel.deleteOne({ _id: id });
+        res.redirect('/admin/article');
     } catch (error) {
         console.error("Add Article Error:", error);
         res.status(500).send(error.message);

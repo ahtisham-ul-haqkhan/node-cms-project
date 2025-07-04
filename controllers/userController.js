@@ -192,19 +192,25 @@ const updateUserPage = async (req, res, next) => {
     }
   };
   
-  const deleteUser = async (req, res) => {
+  const deleteUser = async (req, res, next) => {
     try {
       const { id } = req.params;
   
-      const user = await userModel.findByIdAndDelete(id);
+      const user = await userModel.findById(id);
       if (!user) {
         return res.status(404).send("User Not Found");
       }
+
+    const article = await newsModel.findOne({author: id})
+        if(article) {
+            return res.status(400).json({success: false, message: 'Author is assigned to news articles and cannot be deleted.'});
+            // return next(createError("Category has news", 400));
+        }
+      await categoryModel.deleteent({ _id:id });
   
       res.redirect('/admin/users');
     } catch (error) {
-      console.error("Delete User Error:", error);
-      res.status(500).send("Something went wrong");
+        error(next);
     }
   };
   

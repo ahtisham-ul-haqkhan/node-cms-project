@@ -1,4 +1,5 @@
 const categoryModel = require('../models/categoryModel');
+const newsModel = require('../models/newsModel');
 const createError = require('../utils/error-message')
 const { validationResult } = require('express-validator');
 
@@ -70,15 +71,26 @@ const updateCategory = async(req,res) => {
 }
 
 
-const deleteCategory = async(req,res) => {
+const deleteCategory = async(req,res, next) => {
     try {
-        const {id } = req.params;
-        const category = await categoryModel.findByIdAndDelete(id); 
+        const { id } = req.params;
+
+        const category = await categoryModel.findById(id); 
+        if(!category) {
+            return next(createError("Category not found", 404));
+        }
+
+        const article = await newsModel.findOne({category: id})
+        if(article) {
+            return res.status(400).json({success: false, message: 'Category is assigned to news articles and cannot be deleted.'});
+            // return next(createError("Category has news", 400));
+        }
+
+        await categoryModel.deleteOne({ _id: id });
 
         res.redirect("/admin/category");
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
+        next(error);
     }
 }
 
