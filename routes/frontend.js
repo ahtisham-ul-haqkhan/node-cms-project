@@ -1,7 +1,9 @@
 const express = require('express')
 const frontendController = require('../controllers/frontendController')
+const loadCommonData = require('../middleware/loadCommanData')
 const frontendRouter = express.Router();
 
+frontendRouter.use(loadCommonData);
 frontendRouter.get("/", frontendController.index);
 frontendRouter.get("/category/:name", frontendController.articleByCategories);
 frontendRouter.get("/single/:id", frontendController.singleArticle);
