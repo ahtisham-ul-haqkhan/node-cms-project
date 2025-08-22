@@ -42,8 +42,8 @@ const singleArticle = async (req,res) => {
                         .populate('category',{'name':1, 'slug':1})
                         .populate('author','fullname')
                         .sort({createdAt: -1})
-
-  res.render('single', { singleNews })
+  const comments = await commentsModel.find({article: req.params.id, status: "approved"}).sort({createdAt: -1});
+  res.render('single', { singleNews, comments })
 }
 
 const search = async (req,res) => {
@@ -94,7 +94,23 @@ const author = async (req,res) => {
   // res.render('author', { news, categories, author })
    res.render('author', { paginatedNews, author, query: req.query })
 }
-const addComment = async (req,res) => { }
+const addComment = async (req,res) => { 
+  try {
+    const {name, email, content, } = req.body;
+    const comment = new commentsModel({
+        name,
+        email,
+        content,
+        article: req.params.id
+    });
+    await comment.save();
+
+    res.redirect('/single/' + req.params.id);
+  } catch {
+    res.status(500).send('Error');
+
+  }
+}
 
 module.exports = {
   index,

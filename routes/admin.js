@@ -48,6 +48,7 @@ router.get("/delete-article/:id", isLogin, articleController.deleteArticle);
 
 // // Cooments routes
 router.get("/comments", isLogin, commentsController.allComments);
+router.put("/update-comments-status/:id", isLogin, commentsController.updateCommentStatus);
 router.get("/add-comments", isLogin, commentsController.addCommentsPage);
 router.post("/add-comments", isLogin, commentsController.addComments);
 router.get("/update-comments/:id", isLogin, commentsController.updateCommentsPage);

@@ -15,6 +15,7 @@
                         <th>Actions</th>
                     </thead>
                     <tbody>
+                        <% comments.forEach((comment, index) => { %>
                         <tr>
                           <td class='id'>Ipsum dolor sit amet</td>
                           <td>Rahul Sharma</td>
@@ -29,90 +30,8 @@
                             </select>
                           </td>
                         </tr>
-                        <tr>
-                          <td class='id'>Ipsum dolor sit amet</td>
-                          <td>Rahul Sharma</td>
-                          <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                          <td>Approved</td>
-                          <td>02-Nov-2025</td>
-                          <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                              <option value="pending">Pending</option>
-                              <option value="approved" selected="">Approved</option>
-                              <option value="rejected">Rejected</option>
-                            </select>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class='id'>Ipsum dolor sit amet</td>
-                          <td>Rahul Sharma</td>
-                          <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                          <td>Approved</td>
-                          <td>02-Nov-2025</td>
-                          <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                              <option value="pending">Pending</option>
-                              <option value="approved" selected="">Approved</option>
-                              <option value="rejected">Rejected</option>
-                            </select>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class='id'>Ipsum dolor sit amet</td>
-                          <td>Rahul Sharma</td>
-                          <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                          <td>Approved</td>
-                          <td>02-Nov-2025</td>
-                          <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                              <option value="pending">Pending</option>
-                              <option value="approved" selected="">Approved</option>
-                              <option value="rejected">Rejected</option>
-                            </select>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class='id'>Ipsum dolor sit amet</td>
-                          <td>Rahul Sharma</td>
-                          <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                          <td>Approved</td>
-                          <td>02-Nov-2025</td>
-                          <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                              <option value="pending">Pending</option>
-                              <option value="approved" selected="">Approved</option>
-                              <option value="rejected">Rejected</option>
-                            </select>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class='id'>Ipsum dolor sit amet</td>
-                          <td>Rahul Sharma</td>
-                          <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                          <td>Approved</td>
-                          <td>02-Nov-2025</td>
-                          <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                              <option value="pending">Pending</option>
-                              <option value="approved" selected="">Approved</option>
-                              <option value="rejected">Rejected</option>
-                            </select>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class='id'>Ipsum dolor sit amet</td>
-                          <td>Rahul Sharma</td>
-                          <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                          <td>Approved</td>
-                          <td>02-Nov-2025</td>
-                          <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                              <option value="pending">Pending</option>
-                              <option value="approved" selected="">Approved</option>
-                              <option value="rejected">Rejected</option>
-                            </select>
-                          </td>
-                        </tr>
+                   <% }) %>
+
                     </tbody>
                 </table>
                 <nav aria-label="...">
