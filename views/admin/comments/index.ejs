@@ -1,55 +1,137 @@
 <div id="admin-content">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="admin-heading"><i class="fa fa-comments"></i> Comments Management</h1>
-            </div>
-            <div class="col-md-12">
-                <table class="content-table" style="background: white;">
-                    <thead>
-                        <th>Article</th>
-                        <th>Name</th>
-                        <th>Comment</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </thead>
-                    <tbody>
-                        <% comments.forEach((comment, index) => { %>
-                        <tr>
-                          <td class='id'>Ipsum dolor sit amet</td>
-                          <td>Rahul Sharma</td>
-                          <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                          <td>Approved</td>
-                          <td>02-Nov-2025</td>
-                          <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                              <option value="pending">Pending</option>
-                              <option value="approved" selected="">Approved</option>
-                              <option value="rejected">Rejected</option>
-                            </select>
-                          </td>
-                        </tr>
-                   <% }) %>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="admin-heading"><i class="fa fa-comments"></i> Comments Management</h1>
+      </div>
+      <div class="col-md-12">
+        <table class="content-table" style="background: white;">
+          <thead>
+            <th>S No</th>
+            <th>Article</th>
+            <th>Name</th>
+            <th>Comment</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </thead>
+          <tbody>
+            <% comments.forEach((comment, index) => { %>
+              <tr>
+                <td class='id'><%= index + 1 %></td>
+                <td><%= comment.article.title %></td>
+                <td><%= comment.name %></td>
+                <td><%= comment.content %></td>
+                <td><%= comment.status %></td>
+                <td><%= comment.createdAt.toDateString() %></td>
+                <td class='edit'>
+                  <!-- Status Dropdown -->
+                  <select 
+                    name="status" 
+                    class="form-select form-select-sm d-inline-block w-auto update-status" 
+                    data-id="<%= comment._id %>">
+                      <option value="pending" <%= comment.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                      <option value="approved" <%= comment.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                      <option value="rejected" <%= comment.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+                  </select>
 
-                    </tbody>
-                </table>
-                <nav aria-label="...">
-                  <ul class="pagination">
-                    <li class="page-item disabled">
-                      <a class="page-link">Previous</a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active">
-                      <a class="page-link" href="#" aria-current="page">2</a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                      <a class="page-link" href="#">Next</a>
-                    </li>
-                  </ul>
-                </nav>
-            </div>
-        </div>
+                  <!-- View Button (Modal Trigger) -->
+                  <a href="javascript:void(0)" 
+                     class="view-comment" 
+                     data-id="<%= comment._id %>"
+                     data-article="<%= comment.article.title %>"
+                     data-name="<%= comment.name %>"
+                     data-content="<%= comment.content %>"
+                     data-status="<%= comment.status %>"
+                     data-date="<%= comment.createdAt.toDateString() %>">
+                     <i class='fa fa-eye'></i>
+                  </a>
+
+                  <!-- Delete Button -->
+                  <a href='/admin/delete-comments/<%= comment._id %>'><i class='fa fa-trash-o'></i></a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav aria-label="...">
+          <ul class="pagination">
+            <li class="page-item disabled"><a class="page-link">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active"><a class="page-link" href="#" aria-current="page">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>
+        </nav>
+      </div>
     </div>
+  </div>
 </div>
+
+<!-- View Comment Modal -->
+<div class="modal fade" id="viewCommentModal" tabindex="-1" aria-labelledby="viewCommentLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewCommentLabel">Comment Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Article:</strong> <span id="modal-article"></span></p>
+        <p><strong>Name:</strong> <span id="modal-name"></span></p>
+        <p><strong>Comment:</strong> <span id="modal-content"></span></p>
+        <p><strong>Status:</strong> <span id="modal-status"></span></p>
+        <p><strong>Date:</strong> <span id="modal-date"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS -->
+<script>
+  // ✅ Status Update
+  document.querySelectorAll(".update-status").forEach(select => {
+    select.addEventListener("change", async (e) => {
+      const id = e.target.getAttribute("data-id");
+      const status = e.target.value;
+
+      try {
+        const res = await fetch(`/admin/update-comments-status/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status })
+        });
+
+        const data = await res.json();
+        if(data.success){
+          alert("Comment status updated to " + data.status);
+        } else {
+          alert("Failed to update status: " + data.message);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error updating status: " + err.message);
+      }
+    });
+  });
+
+  // ✅ View Comment Modal
+  document.querySelectorAll(".view-comment").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      document.getElementById("modal-article").textContent = btn.dataset.article;
+      document.getElementById("modal-name").textContent = btn.dataset.name;
+      document.getElementById("modal-content").textContent = btn.dataset.content;
+      document.getElementById("modal-status").textContent = btn.dataset.status;
+      document.getElementById("modal-date").textContent = btn.dataset.date;
+
+      // Bootstrap modal show
+      const modal = new bootstrap.Modal(document.getElementById("viewCommentModal"));
+      modal.show();
+    });
+  });
+</script>

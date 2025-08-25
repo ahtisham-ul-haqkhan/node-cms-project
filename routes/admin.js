@@ -53,7 +53,7 @@ router.get("/add-comments", isLogin, commentsController.addCommentsPage);
 router.post("/add-comments", isLogin, commentsController.addComments);
 router.get("/update-comments/:id", isLogin, commentsController.updateCommentsPage);
 router.post("/update-comments/:id", isLogin, commentsController.updateComments);
-router.post("/delete-comments/:id", isLogin, commentsController.deleteComments);
+router.get("/delete-comments/:id", isLogin, commentsController.deleteComments);
 
 // 404 Middlewar
 

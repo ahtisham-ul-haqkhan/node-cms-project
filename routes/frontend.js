@@ -9,6 +9,18 @@ frontendRouter.get("/category/:name", frontendController.articleByCategories);
 frontendRouter.get("/single/:id", frontendController.singleArticle);
 frontendRouter.get("/search", frontendController.search);
 frontendRouter.get("/author/:name", frontendController.author);
-frontendRouter.post("/single/:id/comment", frontendController.addComment); // <- post instead of get
+frontendRouter.post("/single/:id/comment", frontendController.addComment);
+
+
+// 500 Error Handler (for internal errors)
+frontendRouter.use((err, req, res, next) => {
+    console.error(err.stack);
+    const status = err.status || 500;
+ 
+    res.status(status).render('errors', {
+        message: err.message || "Something went wrong",
+        status:status
+    });
+});
 
 module.exports =  frontendRouter;

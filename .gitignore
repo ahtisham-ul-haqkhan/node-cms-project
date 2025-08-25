@@ -20,6 +20,8 @@ Thumbs.db
 .vscode/
 .idea/
 
+.env
+
 # Coverage directory
 coverage/
 .nyc_output/

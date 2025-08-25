@@ -6,6 +6,8 @@ const userModel = require('../models/newsModel');
 const commentsModel = require('../models/commentModel');
 const settingModel = require("../models/settingModel");
 const paginate = require("../utils/paginate");
+const createError = require('../utils/error-message');
+
 
 
 const index = async (req,res) => {
@@ -21,10 +23,10 @@ const index = async (req,res) => {
   // res.json({ paginatedNews })
   res.render('index', { paginatedNews , query: req.query})
  }
-const articleByCategories = async (req,res) => {
+const articleByCategories = async (req,res, next) => {
   const category = await categoryModel.findOne({ slug: req.params.name });
   if (!category) {
-    return res.status(404).send('Category not found');
+    return next(createError('Category Not Found', 404));
   }
   const paginatedNews = await paginate(newsModel, { category: category._id }, 
                                       req.query, {
@@ -37,11 +39,13 @@ const articleByCategories = async (req,res) => {
   res.render('category', { paginatedNews, category, query: req.query })
  }
 
-const singleArticle = async (req,res) => { 
+const singleArticle = async (req,res, next) => { 
   const singleNews = await newsModel.findById(req.params.id)
                         .populate('category',{'name':1, 'slug':1})
                         .populate('author','fullname')
                         .sort({createdAt: -1})
+
+        if(!singleNews) return next(createError('Article Not Found', 404));
   const comments = await commentsModel.find({article: req.params.id, status: "approved"}).sort({createdAt: -1});
   res.render('single', { singleNews, comments })
 }
@@ -65,7 +69,7 @@ const search = async (req,res) => {
 
   res.render('search', { paginatedNews, searchQuery, query: req.query })
  }
-const author = async (req,res) => { 
+const author = async (req,res, next) => { 
     const id = req.params.name;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -94,7 +98,7 @@ const author = async (req,res) => {
   // res.render('author', { news, categories, author })
    res.render('author', { paginatedNews, author, query: req.query })
 }
-const addComment = async (req,res) => { 
+const addComment = async (req,res, next) => { 
   try {
     const {name, email, content, } = req.body;
     const comment = new commentsModel({
@@ -107,7 +111,7 @@ const addComment = async (req,res) => {
 
     res.redirect('/single/' + req.params.id);
   } catch {
-    res.status(500).send('Error');
+       return next(createError('Error Add Comment', 404));
 
   }
 }

@@ -26,7 +26,6 @@ mongoose.connect(MongoURL).then(() => {
 })
 
   //Frontend Routes
-app.use('/', require('./routes/frontend.js'))
 
 // app.use(isLogin);
 
@@ -41,6 +40,8 @@ app.use('/admin', (req,res,next) => {
   next();
 })
 app.use('/admin', require('./routes/admin.js'))
+
+app.use('/', require('./routes/frontend.js'))
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)

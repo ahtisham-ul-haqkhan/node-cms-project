@@ -27,13 +27,33 @@ const allComments = async (req, res, next) => {
 };
 
 
-const updateCommentStatus = async (req, res) => {
-    res.render('admin/comments');
+const updateCommentStatus = async (req,res,next) => { 
+  try {
+    const comment = await commentsModel.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+    if(!comment){
+      return next(createError('Comment not found', 404));
+    }
+    // res.redirect('/admin/comments');
+       res.json({ success: true, status: comment.status });
+  } catch (error) {
+    next(createError('Error updating comment status', 500));
+  }
+  
 };
 
-const deleteComments = async (req, res) => {
-    res.render('admin/comments');
+const deleteComments = async (req,res,next) => { 
+  try {
+    const comment = await commentsModel.findByIdAndDelete(req.params.id);
+    if(!comment){
+      return next(createError('Comment not found', 404));
+    }
+    // res.json({ success: true });
+       res.json({ success: true });
+  } catch (error) {
+    next(createError('Error deleting comment', 500));
+  }
 };
+  
 
 const addCommentsPage = async (req, res) => {
     res.render('admin/add-comment'); 
