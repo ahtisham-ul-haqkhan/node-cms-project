@@ -57,6 +57,14 @@
         height: 200
       });
     });
+
+     document.querySelector('form').addEventListener('submit', function (event) {
+    const unwantedField = document.querySelector('input[name="files"]');
+
+    if (unwantedField) {
+      unwantedField.remove();
+    }
+  })
   </script>
   <%- contentFor('summernoteCss') %>
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
