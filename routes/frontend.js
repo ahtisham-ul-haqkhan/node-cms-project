@@ -11,6 +11,8 @@ frontendRouter.get("/search", frontendController.search);
 frontendRouter.get("/author/:name", frontendController.author);
 frontendRouter.post("/single/:id/comment", frontendController.addComment);
 
+frontendRouter.get("/testing", frontendController.testing);
+
 
 // 500 Error Handler (for internal errors)
 frontendRouter.use((err, req, res, next) => {

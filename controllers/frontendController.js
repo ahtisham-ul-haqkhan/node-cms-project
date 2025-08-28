@@ -116,11 +116,18 @@ const addComment = async (req,res, next) => {
   }
 }
 
+const testing = async (req,res) => {
+  // res.send('This is long String' .repeat(500000))
+  const news = await commentsModel.find();
+  res.json(news);
+}
+
 module.exports = {
   index,
   articleByCategories,
   singleArticle,
   search,
   author,
-  addComment
+  addComment,
+  testing
 }
